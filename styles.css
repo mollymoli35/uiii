@@ -1,0 +1,1641 @@
+:root {
+    --primary-purple: #9d4edd;
+    --dark-bg: #1a1a2e;
+    --glow-purple: #b762ff;
+    --text-light: #e6e6fa;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-light);
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    padding: 2rem;
+    text-align: center;
+}
+
+header {
+    margin-bottom: 3rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: var(--primary-purple);
+    text-shadow: 0 0 10px var(--glow-purple);
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    color: var(--text-light);
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+.question-section {
+    margin-bottom: 3rem;
+}
+
+input[type="text"] {
+    width: 80%;
+    max-width: 500px;
+    padding: 1rem;
+    border: 2px solid var(--primary-purple);
+    background: rgba(157, 78, 221, 0.1);
+    border-radius: 25px;
+    color: var(--text-light);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus {
+    box-shadow: 0 0 15px var(--glow-purple);
+}
+
+button {
+    padding: 1rem 2rem;
+    background: var(--primary-purple);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px var(--glow-purple);
+}
+
+button:hover {
+    background: var(--glow-purple);
+    box-shadow: 0 0 20px var(--glow-purple);
+    transform: translateY(-2px);
+}
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    position: relative;
+}
+
+.card-slot {
+    width: 120px;
+    height: 200px;
+    margin: 0 1rem;
+    position: relative;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.card-back, .card-front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    transition: transform 0.6s;
+    box-shadow: 0 0 15px var(--glow-purple);
+    overflow: hidden;
+}
+
+.card-back {
+    background: linear-gradient(45deg, var(--primary-purple), var(--glow-purple));
+    background-size: 200% 200%;
+    animation: gradientBG 3s ease infinite;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-back::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(45deg, transparent 45%, rgba(255, 255, 255, 0.1) 50%, transparent 55%),
+        linear-gradient(-45deg, transparent 45%, rgba(255, 255, 255, 0.1) 50%, transparent 55%);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    animation: patternMove 20s linear infinite;
+}
+
+.card-back::after {
+    content: '✧';
+    font-size: 4rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0 0 10px var(--glow-purple);
+    position: relative;
+    z-index: 1;
+    animation: starPulse 2s infinite;
+}
+
+.card-front {
+    background: rgba(157, 78, 221, 0.2);
+    transform: rotateY(180deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--primary-purple);
+    padding: 1rem;
+    position: relative;
+    backdrop-filter: blur(5px);
+}
+
+.card-front::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.card-front:hover::before {
+    transform: translateX(100%);
+}
+
+.card-front img {
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card-front:hover img {
+    transform: scale(1.02);
+    box-shadow: 0 0 30px var(--glow-purple);
+}
+
+.card-front h3 {
+    color: var(--primary-purple);
+    margin: 0.5rem 0;
+    text-shadow: 0 0 5px var(--glow-purple);
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    position: relative;
+    display: inline-block;
+}
+
+.card-front h3::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--glow-purple), transparent);
+}
+
+.card-front p {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--text-light);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    backdrop-filter: blur(3px);
+}
+
+.card-slot.flipped .card-back {
+    transform: rotateY(180deg);
+}
+
+.card-slot.flipped .card-front {
+    transform: rotateY(0);
+}
+
+.reading-result {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgba(157, 78, 221, 0.1);
+    border-radius: 15px;
+    border: 2px solid var(--primary-purple);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+    position: relative;
+    z-index: 1000;
+}
+
+.reading-result h2 {
+    color: var(--primary-purple);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 5px var(--glow-purple);
+}
+
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes glowPulse {
+    0% {
+        box-shadow: 0 0 15px var(--glow-purple);
+    }
+    50% {
+        box-shadow: 0 0 30px var(--glow-purple);
+    }
+    100% {
+        box-shadow: 0 0 15px var(--glow-purple);
+    }
+}
+
+.card-slot.flipped {
+    animation: glowPulse 2s infinite;
+}
+
+@media (max-width: 768px) {
+    .cards-container {
+        gap: 1rem;
+    }
+    
+    .card-slot {
+        width: 150px;
+        height: 260px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+.deck {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 2rem 0;
+    padding: 1rem;
+    background: rgba(157, 78, 221, 0.1);
+    border-radius: 15px;
+    border: 2px solid var(--primary-purple);
+}
+
+.deck-card {
+    width: 100px;
+    height: 175px;
+    cursor: pointer;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: all 0.3s ease;
+    margin: 0 0.5rem;
+}
+
+.deck-card.glowing {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 
+        0 0 20px var(--glow-purple),
+        0 0 40px var(--glow-purple),
+        0 0 60px var(--glow-purple);
+    z-index: 10;
+}
+
+.deck-card.flipped {
+    transform: rotateY(180deg);
+    transition: transform 0.6s ease;
+}
+
+.deck-card-front,
+.deck-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.deck-card-back {
+    background: linear-gradient(135deg, var(--primary-purple), var(--glow-purple));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}
+
+.deck-card-front {
+    background: white;
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.deck-card-front img {
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.deck-card-front div {
+    color: var(--primary-purple);
+    font-size: 0.8rem;
+    text-align: center;
+    text-shadow: 0 0 3px var(--glow-purple);
+}
+
+.deck-card:hover .deck-card-front {
+    box-shadow: 0 0 15px var(--glow-purple);
+}
+
+.deck-card:hover .deck-card-front img {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+/* 添加牌堆标题 */
+.deck-title {
+    width: 100%;
+    text-align: center;
+    color: var(--primary-purple);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 5px var(--glow-purple);
+}
+
+/* 添加选择提示 */
+.selection-hint {
+    text-align: center;
+    color: var(--text-light);
+    margin: 1rem 0;
+    font-size: 1.1rem;
+    text-shadow: 0 0 3px var(--glow-purple);
+}
+
+.reading-container {
+    padding: 2rem;
+    background: rgba(157, 78, 221, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(157, 78, 221, 0.2);
+    margin-top: 2rem;
+    color: var(--text-light);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.card-readings {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.card-reading {
+    background: rgba(157, 78, 221, 0.05);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid rgba(157, 78, 221, 0.2);
+}
+
+.card-reading h3 {
+    color: var(--primary-purple);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    text-shadow: 0 0 5px var(--glow-purple);
+}
+
+.card-reading p {
+    margin: 0.5rem 0;
+    line-height: 1.6;
+    color: var(--text-light);
+    font-size: 1rem;
+}
+
+.gentle-advice {
+    color: var(--glow-purple);
+    font-style: italic;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(157, 78, 221, 0.2);
+    font-weight: 500;
+}
+
+.reading-introduction,
+.personalized-guidance,
+.feedback-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: rgba(157, 78, 221, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(157, 78, 221, 0.2);
+}
+
+.reading-introduction h3,
+.personalized-guidance h3,
+.feedback-section h3 {
+    color: var(--primary-purple);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    text-shadow: 0 0 5px var(--glow-purple);
+}
+
+.reading-introduction p,
+.personalized-guidance p,
+.feedback-section p {
+    color: var(--text-light);
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.guidance-content {
+    margin-top: 1rem;
+}
+
+.feedback-content {
+    margin-top: 1rem;
+    color: var(--text-light);
+    font-style: italic;
+    line-height: 1.6;
+}
+
+/* 添加星星背景效果 */
+.stars-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #1a1a2e, #16213e);
+}
+
+/* 开始界面样式 */
+.start-screen {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: transparent;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    z-index: 1;
+}
+
+.start-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    animation: fadeIn 1s ease;
+}
+
+.start-title {
+    font-size: 3rem;
+    color: var(--text-light);
+    text-shadow: 0 0 20px var(--glow-purple);
+    margin: 0;
+    animation: glowPulse 2s infinite;
+}
+
+.start-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    opacity: 0.8;
+    margin: 0;
+}
+
+.crystal-ball {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    animation: float 3s ease-in-out infinite;
+    z-index: 2;
+}
+
+.ball-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), transparent 60%);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        inset 0 0 50px rgba(255, 255, 255, 0.3),
+        0 0 30px var(--glow-purple);
+}
+
+.ball-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, var(--glow-purple), transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0.5;
+    animation: pulse 2s infinite;
+}
+
+.ball-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 50% 50%, transparent 40%, rgba(255, 255, 255, 0.1) 45%, transparent 50%),
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.05) 0px, rgba(255, 255, 255, 0.05) 1px, transparent 1px, transparent 10px);
+    animation: rotate 20s linear infinite;
+}
+
+.ball-reflection {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 30%;
+    height: 30%;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.8), transparent 70%);
+    border-radius: 50%;
+    animation: shimmer 3s infinite;
+}
+
+/* 添加星星效果 */
+.stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: rotate 30s linear infinite reverse;
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 4s infinite;
+    opacity: 0.3;
+}
+
+.star:nth-child(1) { top: 20%; left: 30%; animation-delay: 0s; }
+.star:nth-child(2) { top: 40%; left: 60%; animation-delay: 0.5s; }
+.star:nth-child(3) { top: 60%; left: 20%; animation-delay: 1s; }
+.star:nth-child(4) { top: 30%; left: 70%; animation-delay: 1.5s; }
+.star:nth-child(5) { top: 70%; left: 40%; animation-delay: 2s; }
+.star:nth-child(6) { top: 50%; left: 50%; animation-delay: 2.5s; }
+
+@keyframes twinkle {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+    100% { opacity: 0.3; }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes shimmer {
+    0%, 100% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 移除洗牌动画 */
+.deck.shuffling {
+    animation: none;
+}
+
+/* 移除洗牌动画关键帧 */
+@keyframes shuffleCards {
+    0% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateX(100px) translateY(-50px) rotate(5deg);
+    }
+    50% {
+        transform: translateX(-100px) translateY(50px) rotate(-5deg);
+    }
+    75% {
+        transform: translateX(50px) translateY(-100px) rotate(3deg);
+    }
+    100% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+    }
+}
+
+/* 水晶球动画 */
+@keyframes crystalGlow {
+    0%, 100% {
+        box-shadow: 
+            inset 0 0 50px rgba(255,255,255,0.5),
+            0 0 30px rgba(157, 78, 221, 0.5);
+    }
+    50% {
+        box-shadow: 
+            inset 0 0 70px rgba(255,255,255,0.7),
+            0 0 50px rgba(157, 78, 221, 0.7);
+    }
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* 隐藏主界面，直到开始按钮被点击 */
+.container {
+    display: none;
+}
+
+/* 当开始按钮被点击后显示主界面 */
+.container.visible {
+    display: block;
+}
+
+/* 结果页面过渡动画 */
+.reading-result.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.reading-result.visible .reading-container {
+    opacity: 1;
+    transform: translateY(0);
+    animation: fadeInUp 0.8s ease 0.3s forwards;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.reading-result.visible .action-buttons {
+    opacity: 1;
+    transform: translateY(0);
+    animation: fadeInUp 0.8s ease 0.6s forwards;
+}
+
+.action-button {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    color: var(--text-light);
+    background: linear-gradient(45deg, var(--primary-purple), var(--glow-purple));
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(157, 78, 221, 0.5);
+}
+
+/* 卡牌容器动画 */
+.cards-container {
+    transition: all 0.5s ease;
+}
+
+.selected-cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    animation: slideUp 0.8s ease forwards;
+}
+
+.selected-card {
+    width: 200px;
+    height: 350px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateY(180deg);
+    animation: cardAppear 0.6s ease forwards;
+    opacity: 0;
+}
+
+.selected-card:nth-child(1) { animation-delay: 0.2s; }
+.selected-card:nth-child(2) { animation-delay: 0.4s; }
+.selected-card:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes cardAppear {
+    from {
+        transform: translateY(50px) rotateY(180deg);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) rotateY(180deg);
+        opacity: 1;
+    }
+}
+
+/* 结果页面动画 */
+.reading-result {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+    position: relative;
+    z-index: 1000;
+}
+
+.reading-result.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.reading-container {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.reading-result.visible .reading-container {
+    opacity: 1;
+    transform: translateY(0);
+    animation: fadeInUp 0.8s ease 0.3s forwards;
+}
+
+.action-buttons {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.reading-result.visible .action-buttons {
+    opacity: 1;
+    transform: translateY(0);
+    animation: fadeInUp 0.8s ease 0.6s forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+#video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.error-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    z-index: 1000;
+    font-size: 16px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+.deck-card.selected {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px var(--glow-purple);
+    border: 2px solid var(--glow-purple);
+    z-index: 10;
+}
+
+.deck-card.selected .card-back {
+    background: linear-gradient(45deg, var(--glow-purple), var(--primary-purple));
+    animation: selectedGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes selectedGlow {
+    0% {
+        box-shadow: 0 0 20px var(--glow-purple);
+    }
+    50% {
+        box-shadow: 0 0 40px var(--glow-purple);
+    }
+    100% {
+        box-shadow: 0 0 20px var(--glow-purple);
+    }
+}
+
+.example-questions {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: rgba(157, 78, 221, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(157, 78, 221, 0.2);
+}
+
+.example-title {
+    color: var(--primary-purple);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.example-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.category {
+    background: rgba(157, 78, 221, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(157, 78, 221, 0.2);
+}
+
+.category h4 {
+    color: var(--primary-purple);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.category ul {
+    list-style: none;
+    padding: 0;
+}
+
+.category li {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    padding: 0.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.category li:hover {
+    background: rgba(157, 78, 221, 0.2);
+    transform: translateX(5px);
+}
+
+@media (max-width: 768px) {
+    .example-categories {
+        grid-template-columns: 1fr;
+    }
+}
+
+.tutorial-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.tutorial-content {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    padding: 2rem;
+    border-radius: 15px;
+    border: 2px solid var(--primary-purple);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 30px var(--glow-purple);
+    animation: fadeIn 0.5s ease;
+}
+
+.tutorial-content h3 {
+    color: var(--primary-purple);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px var(--glow-purple);
+}
+
+.tutorial-section {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(157, 78, 221, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(157, 78, 221, 0.2);
+}
+
+.tutorial-section h4 {
+    color: var(--glow-purple);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.tutorial-section p {
+    color: var(--text-light);
+    margin: 0.5rem 0;
+    line-height: 1.6;
+}
+
+.start-reading-btn {
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(45deg, var(--primary-purple), var(--glow-purple));
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+}
+
+.start-reading-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(157, 78, 221, 0.5);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#live2d-widget {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    pointer-events: none;
+    outline: none !important;
+    border: none !important;
+}
+
+#live2d-widget canvas {
+    pointer-events: auto;
+    outline: none !important;
+    border: none !important;
+}
+
+.live2d-speech-bubble {
+    position: fixed;
+    bottom: 120px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    max-width: 300px;
+    font-size: 16px;
+    line-height: 1.5;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    pointer-events: none;
+    transform: translateY(0);
+    animation: bubblePulse 2s infinite;
+}
+
+.live2d-speech-bubble .bubble-text {
+    margin: 0;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.live2d-speech-bubble.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+@keyframes bubblePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    #live2d-widget {
+        display: none;
+    }
+}
+
+.fortune-teller-selection {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.fortune-tellers {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.fortune-teller {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(183, 98, 255, 0.1));
+    border-radius: 15px;
+    padding: 2rem;
+    width: 300px;
+    border: 2px solid transparent;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    animation: float 3s ease-in-out infinite;
+    box-shadow: 
+        0 0 20px rgba(157, 78, 221, 0.2),
+        inset 0 0 30px rgba(157, 78, 221, 0.1);
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+}
+
+.fortune-teller::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(45deg, transparent 45%, rgba(255, 255, 255, 0.1) 50%, transparent 55%),
+        linear-gradient(-45deg, transparent 45%, rgba(255, 255, 255, 0.1) 50%, transparent 55%);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    animation: patternMove 20s linear infinite;
+}
+
+.fortune-teller::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(157, 78, 221, 0.1) 100%);
+    opacity: 0.5;
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+.fortune-teller:hover {
+    transform: rotateY(15deg) translateZ(20px);
+    box-shadow: 
+        0 10px 30px rgba(157, 78, 221, 0.3),
+        inset 0 0 40px rgba(157, 78, 221, 0.2);
+    border-color: var(--glow-purple);
+    animation: none;
+}
+
+.fortune-teller:hover::after {
+    opacity: 0.8;
+    animation: glowPulse 1.5s ease-in-out infinite;
+}
+
+.fortune-teller-image {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 1.5rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: all 0.5s ease;
+    filter: drop-shadow(0 0 10px rgba(157, 78, 221, 0.5));
+    transform-style: preserve-3d;
+    transform: translateZ(10px);
+    border-radius: 10px;
+    border: 2px solid rgba(157, 78, 221, 0.3);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(183, 98, 255, 0.1));
+}
+
+.fortune-teller-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.fortune-teller-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(157, 78, 221, 0.1) 100%);
+    opacity: 0.5;
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+.fortune-teller:hover .fortune-teller-image {
+    transform: translateZ(20px) rotateY(-5deg);
+    filter: drop-shadow(0 0 20px var(--glow-purple));
+    border-color: var(--glow-purple);
+}
+
+.fortune-teller:hover .fortune-teller-image::before {
+    transform: translateX(100%);
+}
+
+.fortune-teller h3 {
+    color: var(--primary-purple);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    text-shadow: 0 0 5px var(--glow-purple);
+    transform: translateZ(5px);
+    position: relative;
+    display: inline-block;
+    letter-spacing: 1px;
+}
+
+.fortune-teller h3::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--glow-purple), transparent);
+    animation: lineGlow 2s ease-in-out infinite;
+}
+
+.fortune-teller p {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    transform: translateZ(5px);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.5px;
+}
+
+.fortune-teller-details {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(26, 26, 46, 0.9));
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-top: 1rem;
+    opacity: 0;
+    transform: translateY(-10px) rotateX(-10deg) translateZ(-20px);
+    transition: all 0.3s ease;
+    z-index: 10;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--glow-purple);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    box-shadow: 0 0 30px rgba(157, 78, 221, 0.2);
+}
+
+.fortune-teller-details::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(45deg, transparent 45%, rgba(255, 255, 255, 0.05) 50%, transparent 55%),
+        linear-gradient(-45deg, transparent 45%, rgba(255, 255, 255, 0.05) 50%, transparent 55%);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    animation: patternMove 20s linear infinite;
+}
+
+.fortune-teller-details p {
+    color: #fff;
+    margin: 0.8rem 0;
+    font-size: 1rem;
+    text-align: left;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+    position: relative;
+    padding-left: 1.5rem;
+    letter-spacing: 0.5px;
+}
+
+.fortune-teller-details p::before {
+    content: '✨';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--glow-purple);
+    animation: starTwinkle 2s ease-in-out infinite;
+}
+
+.fortune-teller:hover .fortune-teller-details {
+    display: block;
+    opacity: 1;
+    transform: translateY(0) rotateX(0) translateZ(0);
+    animation: fadeIn 0.5s ease;
+}
+
+.fortune-teller:hover .fortune-teller-details p {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.fortune-teller-details p:nth-child(1) { transition-delay: 0.1s; }
+.fortune-teller-details p:nth-child(2) { transition-delay: 0.2s; }
+.fortune-teller-details p:nth-child(3) { transition-delay: 0.3s; }
+.fortune-teller-details p:nth-child(4) { transition-delay: 0.4s; }
+
+@keyframes patternMove {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 20px 20px;
+    }
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes lineGlow {
+    0%, 100% {
+        opacity: 0.5;
+        width: 50px;
+    }
+    50% {
+        opacity: 1;
+        width: 60px;
+    }
+}
+
+@keyframes starTwinkle {
+    0%, 100% {
+        opacity: 0.5;
+        transform: translateY(-50%) scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1.2);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotateY(0);
+    }
+    50% {
+        transform: translateY(-10px) rotateY(5deg);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) rotateX(-10deg) translateZ(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0) translateZ(0);
+    }
+}
+
+/* 对话界面样式 */
+.chat-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(157, 78, 221, 0.1);
+    border-radius: 15px;
+    border: 1px solid var(--primary-purple);
+}
+
+.chat-section h3 {
+    color: var(--primary-purple);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 400px;
+    background: var(--chat-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-purple) var(--chat-bg);
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: var(--chat-bg);
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background-color: var(--primary-purple);
+    border-radius: 4px;
+}
+
+.chat-input-container {
+    padding: 15px;
+    background: var(--chat-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-message {
+    max-width: 85%;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 15px;
+    font-size: 14px;
+    line-height: 1.4;
+    animation: fadeIn 0.3s ease;
+}
+
+.chat-message.fortune-teller {
+    background: var(--primary-purple);
+    color: white;
+    align-self: flex-start;
+    border-bottom-left-radius: 0;
+}
+
+.chat-message.user {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 0;
+}
+
+.chat-input {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 0.8rem;
+    border: 1px solid var(--primary-purple);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1rem;
+}
+
+.chat-input input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.chat-input button {
+    padding: 0.8rem 1.5rem;
+    background: var(--primary-purple);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.chat-input button:hover {
+    background: var(--glow-purple);
+    transform: translateY(-2px);
+}
+
+/* 聊天界面样式 */
+.chat-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 15px;
+    max-width: 80%;
+}
+
+.user-message {
+    background-color: #e3f2fd;
+    margin-left: auto;
+}
+
+.assistant-message {
+    background-color: #f5f5f5;
+    margin-right: auto;
+}
+
+.chat-input-container {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+#chatInput {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-right: 10px;
+    outline: none;
+}
+
+#sendMessage {
+    padding: 10px 20px;
+    background-color: var(--primary-purple);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px var(--glow-purple);
+}
+
+#sendMessage:hover {
+    background-color: var(--glow-purple);
+    box-shadow: 0 0 20px var(--glow-purple);
+    transform: translateY(-2px);
+}
+
+#sendMessage:disabled {
+    background-color: #9d4edd80;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+} 

@@ -1,0 +1,1113 @@
+// 塔罗牌数据
+const tarotCards = [
+    { name: '愚者', image: 'tarot_images/00愚者.jpg', upright: '新的开始、冒险、自由、天真、自发性', reversed: '鲁莽、冲动、不切实际、缺乏方向' },
+    { name: '魔术师', image: 'tarot_images/01魔术师.jpg', upright: '创造力、技能、专注、意志力', reversed: '操纵、欺骗、未实现的潜力' },
+    { name: '女祭司', image: 'tarot_images/02女祭祀.jpg', upright: '直觉、神秘、潜意识、内在智慧', reversed: '缺乏直觉、忽视直觉、隐藏的知识' },
+    { name: '女皇', image: 'tarot_images/03皇后.jpg', upright: '生育、自然、富足、感性', reversed: '过度放纵、依赖、缺乏纪律' },
+    { name: '皇帝', image: 'tarot_images/04皇帝.jpg', upright: '权威、结构、控制、稳定', reversed: '专制、缺乏控制、不灵活' },
+    { name: '教皇', image: 'tarot_images/05教皇.jpg', upright: '传统、信仰、精神指导、道德', reversed: '教条主义、传统束缚、缺乏信仰' },
+    { name: '恋人', image: 'tarot_images/06恋人.jpg', upright: '爱情、和谐、关系、选择', reversed: '不和谐、不平衡、错误的选择' },
+    { name: '战车', image: 'tarot_images/07战车.jpg', upright: '胜利、意志力、决心、成功', reversed: '缺乏方向、冲突、失败' },
+    { name: '力量', image: 'tarot_images/08力量.jpg', upright: '勇气、耐心、控制、内在力量', reversed: '软弱、缺乏信心、自我怀疑' },
+    { name: '隐士', image: 'tarot_images/09隐士.jpg', upright: '内省、孤独、寻求真理、智慧', reversed: '孤立、孤独、拒绝帮助' },
+    { name: '命运之轮', image: 'tarot_images/10命运之轮.jpg', upright: '变化、命运、机会、转折点', reversed: '坏运气、缺乏控制、外部变化' },
+    { name: '正义', image: 'tarot_images/11正义.jpg', upright: '公平、真相、因果、平衡', reversed: '不公正、缺乏责任感、偏见' },
+    { name: '倒吊人', image: 'tarot_images/12倒吊人.jpg', upright: '牺牲、暂停、新视角、放手', reversed: '拖延、抗拒改变、缺乏牺牲' },
+    { name: '死神', image: 'tarot_images/13死神.jpg', upright: '结束、转变、放手、重生', reversed: '抗拒改变、停滞、恐惧' },
+    { name: '节制', image: 'tarot_images/14节制.jpg', upright: '平衡、和谐、耐心、节制', reversed: '不平衡、过度、缺乏节制' },
+    { name: '恶魔', image: 'tarot_images/15恶魔.jpg', upright: '束缚、物质主义、权力、成瘾', reversed: '解放、打破束缚、克服成瘾' },
+    { name: '塔', image: 'tarot_images/16高塔.jpg', upright: '突然变化、启示、觉醒、破坏', reversed: '避免灾难、害怕改变、延迟不可避免' },
+    { name: '星星', image: 'tarot_images/17星星.jpg', upright: '希望、灵感、平静、信心', reversed: '绝望、缺乏信心、失望' },
+    { name: '月亮', image: 'tarot_images/18月亮.jpg', upright: '幻觉、恐惧、焦虑、潜意识', reversed: '释放恐惧、减少焦虑、真相' },
+    { name: '太阳', image: 'tarot_images/19太阳.jpg', upright: '快乐、成功、活力、自信', reversed: '暂时的挫折、缺乏信心、成功延迟' },
+    { name: '审判', image: 'tarot_images/20审判.jpg', upright: '判断、重生、内在召唤、赦免', reversed: '自我怀疑、缺乏判断、拒绝召唤' },
+    { name: '世界', image: 'tarot_images/21世界.jpg', upright: '完成、成就、旅行、成功', reversed: '缺乏完成、延迟、不完整' }
+];
+
+// DOM 元素
+const questionInput = document.getElementById('question');
+const cardSlots = document.querySelectorAll('.card-slot');
+const resultContent = document.querySelector('.reading-result');
+const cardsContainer = document.querySelector('.cards-container');
+
+// 开始界面相关
+const startScreen = document.querySelector('.start-screen');
+const startButton = document.getElementById('startButton');
+const container = document.querySelector('.container');
+
+// Face++ API 配置
+const API_KEY = 'JyE8Vkx-5SOygr4wq-_LWcvvSxWUZr-Q';
+const API_SECRET = 'ulbuY0_jGXtKP1TvUHXqczUmmvYM7GLe';
+const API_URL = 'http://localhost:3000/api/gesture';
+
+// 使用代理服务器
+const PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
+
+// 视频和画布元素
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+// Live2D 配置
+const live2dConfig = {
+    model: {
+        jsonPath: "魔女/魔女.model3.json",
+        scale: 1.2,
+        position: [0, 0],
+        stageStyle: {
+            width: 300,
+            height: 400
+        }
+    },
+    display: {
+        superSample: 2,
+        width: 300,
+        height: 400,
+        position: 'right',
+        hOffset: 0,
+        vOffset: 0
+    },
+    mobile: {
+        show: true,
+        scale: 1.0,
+        motion: true
+    },
+    react: {
+        opacityDefault: 1,
+        opacityOnHover: 0.8
+    },
+    dialog: {
+        enable: true,
+        script: {
+            'tap body': '你好呀~',
+            'tap face': '不要戳我脸啦~'
+        }
+    }
+};
+
+// 创建牌堆
+function createDeck() {
+    const deck = document.createElement('div');
+    deck.className = 'deck';
+    deck.style.display = 'flex';
+    deck.style.flexWrap = 'wrap';
+    deck.style.justifyContent = 'center';
+    deck.style.gap = '1rem';
+    deck.style.margin = '2rem 0';
+    
+    // 随机打乱牌的顺序
+    const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
+    
+    shuffledCards.forEach((card, index) => {
+        const cardElement = document.createElement('div');
+        cardElement.className = 'deck-card';
+        cardElement.style.width = '100px';
+        cardElement.style.height = '175px';
+        cardElement.style.cursor = 'pointer';
+        cardElement.style.position = 'relative';
+        cardElement.style.transformStyle = 'preserve-3d';
+        cardElement.style.transition = 'transform 0.6s';
+        // 初始状态为背面朝上
+        cardElement.style.transform = 'rotateY(0deg)';
+        // 存储原始卡牌数据
+        cardElement.dataset.cardName = card.name;
+        cardElement.dataset.cardIndex = index;
+        
+        // 卡牌背面
+        const cardBack = document.createElement('div');
+        cardBack.className = 'card-back';
+        cardBack.style.position = 'absolute';
+        cardBack.style.width = '100%';
+        cardBack.style.height = '100%';
+        cardBack.style.backfaceVisibility = 'hidden';
+        cardBack.style.borderRadius = '10px';
+        cardBack.style.background = 'linear-gradient(45deg, var(--primary-purple), var(--glow-purple))';
+        cardBack.style.backgroundSize = '200% 200%';
+        cardBack.style.animation = 'gradientBG 3s ease infinite';
+        
+        // 卡牌正面
+        const cardFront = document.createElement('div');
+        cardFront.className = 'card-front';
+        cardFront.style.position = 'absolute';
+        cardFront.style.width = '100%';
+        cardFront.style.height = '100%';
+        cardFront.style.backfaceVisibility = 'hidden';
+        cardFront.style.borderRadius = '10px';
+        cardFront.style.transform = 'rotateY(180deg)';
+        cardFront.style.background = 'rgba(157, 78, 221, 0.2)';
+        cardFront.style.border = '2px solid var(--primary-purple)';
+        cardFront.style.padding = '0.5rem';
+        cardFront.style.display = 'flex';
+        cardFront.style.flexDirection = 'column';
+        cardFront.style.alignItems = 'center';
+        cardFront.style.justifyContent = 'space-between';
+        
+        const cardImage = document.createElement('img');
+        cardImage.src = card.image;
+        cardImage.style.width = '100%';
+        cardImage.style.height = '100%';
+        cardImage.style.objectFit = 'cover';
+        cardImage.style.borderRadius = '5px';
+        
+        const cardName = document.createElement('div');
+        cardName.textContent = card.name;
+        cardName.style.color = 'var(--primary-purple)';
+        cardName.style.fontSize = '0.8rem';
+        cardName.style.textAlign = 'center';
+        cardName.style.width = '100%';
+        cardName.style.marginTop = 'auto';
+        
+        cardFront.appendChild(cardImage);
+        cardFront.appendChild(cardName);
+        cardElement.appendChild(cardBack);
+        cardElement.appendChild(cardFront);
+        deck.appendChild(cardElement);
+    });
+    
+    return deck;
+}
+
+// 显示牌堆
+function showDeck() {
+    const deck = createDeck();
+    cardsContainer.innerHTML = '';
+    cardsContainer.appendChild(deck);
+    
+    // 添加点击事件
+    const deckCards = deck.querySelectorAll('.deck-card');
+    deckCards.forEach(card => {
+        card.addEventListener('click', () => selectCard(card));
+    });
+}
+
+// 选择卡牌
+let selectedCards = [];
+function selectCard(cardElement) {
+    if (selectedCards.length >= 3) return;
+    
+    const isReversed = Math.random() < 0.5;
+    const cardName = cardElement.dataset.cardName;
+    const card = {
+        ...tarotCards.find(c => c.name === cardName),
+        isReversed: isReversed
+    };
+    
+    // 添加选中效果
+    cardElement.classList.add('selected');
+    
+    // 只旋转卡牌，不旋转文字
+    cardElement.style.transform = `rotateY(180deg) scale(1.1)`;
+    
+    const cardSlot = cardSlots[selectedCards.length];
+    flipCard(cardSlot, card);
+    selectedCards.push(card);
+    
+    // 移除选中卡牌的点击选择文字
+    const cardNameElement = cardElement.querySelector('.deck-card-front div:last-child');
+    if (cardNameElement) {
+        cardNameElement.style.display = 'none';
+    }
+    
+    // 添加选中动画效果
+    cardElement.style.animation = 'selectedPulse 1s ease-in-out';
+    
+    // 如果已经选择了三张牌，自动跳转到结果界面
+    if (selectedCards.length === 3) {
+        // 延迟1秒后跳转，让用户看到最后一张牌的翻转效果
+        setTimeout(() => {
+            // 隐藏提问框和抽牌按钮
+            document.querySelector('.question-section').style.display = 'none';
+            
+            // 隐藏摄像头和画布
+            video.style.display = 'none';
+            canvas.style.display = 'none';
+            
+            // 停止摄像头流
+            if (video.srcObject) {
+                const tracks = video.srcObject.getTracks();
+                tracks.forEach(track => track.stop());
+            }
+            
+            // 创建新的卡牌容器
+            const selectedCardsContainer = document.createElement('div');
+            selectedCardsContainer.className = 'selected-cards-container';
+            
+            // 将选中的卡牌移动到新容器
+            selectedCards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'selected-card';
+                
+                const cardImage = document.createElement('img');
+                cardImage.src = card.image;
+                cardImage.style.width = '100%';
+                cardImage.style.height = '100%';
+                cardImage.style.objectFit = 'cover';
+                cardImage.style.borderRadius = '10px';
+                cardImage.style.transform = card.isReversed ? 'rotate(180deg)' : 'none';
+                
+                cardElement.appendChild(cardImage);
+                selectedCardsContainer.appendChild(cardElement);
+            });
+            
+            // 清空原有内容并添加新内容
+            cardsContainer.innerHTML = '';
+            cardsContainer.appendChild(selectedCardsContainer);
+            
+            // 显示结果
+            document.getElementById('questionText').textContent = questionInput.value;
+            document.getElementById('pastCard').textContent = `${selectedCards[0].name}${selectedCards[0].isReversed ? '(逆位)' : '(正位)'}：${selectedCards[0].isReversed ? selectedCards[0].reversed : selectedCards[0].upright}`;
+            document.getElementById('presentCard').textContent = `${selectedCards[1].name}${selectedCards[1].isReversed ? '(逆位)' : '(正位)'}：${selectedCards[1].isReversed ? selectedCards[1].reversed : selectedCards[1].upright}`;
+            document.getElementById('futureCard').textContent = `${selectedCards[2].name}${selectedCards[2].isReversed ? '(逆位)' : '(正位)'}：${selectedCards[2].isReversed ? selectedCards[2].reversed : selectedCards[2].upright}`;
+            document.getElementById('overallMeaning').textContent = generateOverallMeaning(selectedCards);
+            
+            // 显示结果页面
+            const resultElement = document.querySelector('.reading-result');
+            resultElement.style.display = 'block';
+            resultElement.classList.add('visible');
+        }, 1000);
+    }
+}
+
+// 重置占卜
+function resetReading() {
+    // 清空选中的卡牌
+    selectedCards = [];
+    
+    // 重置卡牌槽
+    cardSlots.forEach(slot => {
+        slot.classList.remove('flipped');
+        slot.innerHTML = '<div class="card-back"></div><div class="card-front"></div>';
+    });
+    
+    // 显示问题输入框
+    document.querySelector('.question-section').style.display = 'block';
+    
+    // 清空问题输入
+    questionInput.value = '';
+    
+    // 隐藏结果页面
+    const resultElement = document.querySelector('.reading-result');
+    resultElement.style.display = 'none';
+    resultElement.classList.remove('visible');
+}
+
+// 添加分享按钮事件监听
+document.getElementById('shareButton').addEventListener('click', () => {
+    // 获取问题和结果
+    const question = document.getElementById('questionText').textContent;
+    const past = document.getElementById('pastCard').textContent;
+    const present = document.getElementById('presentCard').textContent;
+    const future = document.getElementById('futureCard').textContent;
+    const meaning = document.getElementById('overallMeaning').textContent;
+    
+    // 构建分享文本
+    const shareText = `
+我的塔罗牌占卜结果：
+
+问题：${question}
+
+过去：${past}
+现在：${present}
+未来：${future}
+
+塔罗启示：${meaning}
+
+来自神秘塔罗牌占卜
+    `.trim();
+    
+    // 复制到剪贴板
+    navigator.clipboard.writeText(shareText).then(() => {
+        alert('占卜结果已复制到剪贴板，可以分享给朋友了！');
+    }).catch(err => {
+        console.error('复制失败:', err);
+        alert('复制失败，请手动复制。');
+    });
+});
+
+// 主要流程
+function startReading() {
+    const question = questionInput.value.trim();
+    if (!question) {
+        alert('请先输入你想占卜的问题');
+        return;
+    }
+    
+    // 添加问题输入动画效果
+    questionInput.style.animation = 'glowPulse 1s ease';
+    setTimeout(() => {
+        questionInput.style.animation = '';
+    }, 1000);
+    
+    // 随机抽取三张牌
+    const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
+    const selectedThreeCards = shuffledCards.slice(0, 3);
+    
+    // 清空之前的选择
+    selectedCards = [];
+    cardSlots.forEach(slot => {
+        slot.classList.remove('flipped');
+        slot.innerHTML = '<div class="card-back"></div><div class="card-front"></div>';
+    });
+    
+    // 显示抽取的卡牌
+    selectedThreeCards.forEach((card, index) => {
+        const isReversed = Math.random() < 0.5;
+        const cardWithState = {
+            ...card,
+            isReversed: isReversed
+        };
+        
+        // 翻转卡牌
+        flipCard(cardSlots[index], cardWithState);
+        selectedCards.push(cardWithState);
+        
+        // 添加翻转动画
+        setTimeout(() => {
+            cardSlots[index].classList.add('flipped');
+        }, index * 500); // 每张牌间隔500毫秒翻转
+    });
+    
+    // 延迟显示结果
+    setTimeout(() => {
+        // 显示结果
+        document.getElementById('questionText').textContent = questionInput.value;
+        document.getElementById('pastCard').textContent = `${selectedCards[0].name}${selectedCards[0].isReversed ? '(逆位)' : '(正位)'}：${selectedCards[0].isReversed ? selectedCards[0].reversed : selectedCards[0].upright}`;
+        document.getElementById('presentCard').textContent = `${selectedCards[1].name}${selectedCards[1].isReversed ? '(逆位)' : '(正位)'}：${selectedCards[1].isReversed ? selectedCards[1].reversed : selectedCards[1].upright}`;
+        document.getElementById('futureCard').textContent = `${selectedCards[2].name}${selectedCards[2].isReversed ? '(逆位)' : '(正位)'}：${selectedCards[2].isReversed ? selectedCards[2].reversed : selectedCards[2].upright}`;
+        document.getElementById('overallMeaning').textContent = generateOverallMeaning(selectedCards);
+        
+        // 显示结果页面
+        const resultElement = document.querySelector('.reading-result');
+        resultElement.style.display = 'block';
+        resultElement.classList.add('visible');
+    }, 2000); // 等待所有卡牌翻转完成后显示结果
+}
+
+// 开始按钮点击事件
+startButton.addEventListener('click', () => {
+    // 延迟后隐藏开始界面并显示主界面
+    setTimeout(() => {
+        startScreen.style.opacity = '0';
+        startScreen.style.transition = 'opacity 0.5s ease';
+        
+        setTimeout(() => {
+            startScreen.style.display = 'none';
+            container.classList.add('visible');
+            // 显示牌堆
+            showDeck();
+        }, 500);
+    }, 1000);
+});
+
+// 初始化时不显示牌堆
+// showDeck();
+
+// 翻转动画
+function flipCard(cardElement, card) {
+    cardElement.classList.add('flipped');
+    const frontElement = cardElement.querySelector('.card-front');
+    
+    frontElement.innerHTML = `
+        <div style="display: flex; flex-direction: column; height: 100%; width: 100%;">
+            <img src="${card.image}" alt="${card.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px; transform: ${card.isReversed ? 'rotate(180deg)' : 'none'};">
+        </div>
+    `;
+}
+
+// 生成占卜结果解释
+function generateReading(cards, question) {
+    return `
+        <div class="reading-container">
+            <div class="reading-introduction">
+                <h3>塔罗指引</h3>
+                <p>亲爱的朋友，关于你的问题："${question}"，塔罗牌为你带来了指引：</p>
+            </div>
+            
+            <div class="card-readings">
+                ${generateCardReadings(cards)}
+            </div>
+            
+            <div class="personalized-guidance">
+                <h3>塔罗的启示</h3>
+                <div class="guidance-content">
+                    <p class="gentle-advice">${generateOverallMeaning(cards)}</p>
+                </div>
+            </div>
+            
+            <div class="feedback-section">
+                <div class="feedback-content">
+                    <p>塔罗牌为你带来了指引，愿这些启示能帮助你找到内心的答案。</p>
+                    <p>记住，塔罗牌是照亮前路的明灯，但最终的选择权在你手中。</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// 生成整体解读
+function generateOverallMeaning(cards) {
+    // 基础含义
+    const meanings = cards.map(card => {
+        const meaning = card.isReversed ? card.reversed : card.upright;
+        return `${card.name}${card.isReversed ? '(逆位)' : '(正位)'}：${meaning}`;
+    });
+    
+    // 根据牌的组合生成情感启示
+    let emotionalGuidance = '';
+    
+    // 检查是否包含特定的牌组合
+    const hasFool = cards.some(card => card.name === '愚者');
+    const hasDeath = cards.some(card => card.name === '死神');
+    const hasTower = cards.some(card => card.name === '塔');
+    const hasStar = cards.some(card => card.name === '星星');
+    const hasMoon = cards.some(card => card.name === '月亮');
+    const hasSun = cards.some(card => card.name === '太阳');
+    const hasWorld = cards.some(card => card.name === '世界');
+    const hasLovers = cards.some(card => card.name === '恋人');
+    const hasStrength = cards.some(card => card.name === '力量');
+    const hasHermit = cards.some(card => card.name === '隐士');
+    const hasWheel = cards.some(card => card.name === '命运之轮');
+    const hasJustice = cards.some(card => card.name === '正义');
+    const hasHanged = cards.some(card => card.name === '倒吊人');
+    const hasTemperance = cards.some(card => card.name === '节制');
+    const hasDevil = cards.some(card => card.name === '恶魔');
+    const hasJudgement = cards.some(card => card.name === '审判');
+    const hasMagician = cards.some(card => card.name === '魔术师');
+    const hasPriestess = cards.some(card => card.name === '女祭司');
+    const hasEmpress = cards.some(card => card.name === '女皇');
+    const hasEmperor = cards.some(card => card.name === '皇帝');
+    const hasHierophant = cards.some(card => card.name === '教皇');
+    const hasChariot = cards.some(card => card.name === '战车');
+    
+    // 检查顺逆位情况
+    const allReversed = cards.every(card => card.isReversed);
+    const allUpright = cards.every(card => !card.isReversed);
+    const hasReversed = cards.some(card => card.isReversed);
+    
+    // 根据牌的组合生成不同的启示
+    if (hasFool && hasStar) {
+        emotionalGuidance = "\n\n\n\n\n\n\n✨\n新的冒险正在召唤你，\n跟随内心的指引，\n勇敢地迈出第一步。";
+    } else if (hasDeath && hasTower) {
+        if (allReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n虽然改变令人恐惧，\n但请相信这是重生的必经之路。\n放下过去，迎接新生。";
+        } else {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n巨大的转变即将来临，\n这是命运的安排。\n保持开放的心态，接受改变。";
+        }
+    } else if (hasMoon && hasTower) {
+        if (hasMoon && cards.find(card => card.name === '月亮').isReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n内心的恐惧终将消散，\n真相会带来光明。\n保持勇气，面对真实的自己。";
+        } else {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n面对内心的恐惧和不安，\n记住这只是暂时的。\n真相终将照亮黑暗。";
+        }
+    } else if (hasStar && hasSun) {
+        emotionalGuidance = "\n\n\n\n\n\n\n✨\n希望和光明就在前方，\n保持信心，\n你的努力终将得到回报。";
+    } else if (hasWorld) {
+        if (cards.find(card => card.name === '世界').isReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n虽然目标似乎还很遥远，\n但请相信每一步都在\n引领你走向圆满。";
+        } else {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n一个重要的周期即将完成，\n新的篇章正在展开。\n保持开放和期待。";
+        }
+    } else if (hasLovers && hasStrength) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n爱与力量同在，\n这是做出重要选择的时刻。\n相信自己的判断。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在感情中保持独立和坚强，\n不要被外界因素\n影响你的决定。";
+        }
+    } else if (hasHermit && hasWheel) {
+        if (hasHermit && cards.find(card => card.name === '隐士').isReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n走出孤独，\n与他人分享你的智慧和经验。\n这是成长的契机。";
+        } else {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在独处中寻找答案，\n命运之轮会带来新的转机。\n保持耐心。";
+        }
+    } else if (hasJustice && hasHanged) {
+        if (allReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n放下固有的判断，\n用新的视角看待问题。\n改变思维方式会带来转机。";
+        } else {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n保持公正的同时，\n也要学会换位思考。\n平衡是解决问题的关键。";
+        }
+    } else if (hasTemperance && hasDevil) {
+        if (hasTemperance && !cards.find(card => card.name === '节制').isReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在诱惑面前保持节制，\n这是获得真正自由的关键。";
+        } else {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n摆脱束缚，\n找到生活中的平衡点。\n不要被物质欲望所困。";
+        }
+    } else if (hasJudgement) {
+        if (cards.find(card => card.name === '审判').isReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n不要被过去的判断所困扰，\n给自己一个重新开始的机会。";
+        } else {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n听从内心的召唤，\n这是做出重要决定的时刻。\n相信自己的判断。";
+        }
+    } else if (hasMagician && hasPriestess) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n创造力与直觉的结合\n将带来突破性的进展。\n相信自己的能力。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在行动之前，\n先倾听内心的声音。\n平衡理性与感性。";
+        }
+    } else if (hasEmpress && hasEmperor) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n丰盛与权威同在，\n这是实现目标的最佳时机。\n保持平衡与和谐。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求目标时不要忽视内心的需求，\n找到力量与温柔的平衡。";
+        }
+    } else if (hasHierophant && hasChariot) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n传统与创新的结合\n将带来成功。\n保持前进的动力，同时尊重规则。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n不要被传统所束缚，\n勇敢地开辟新的道路。\n相信自己的选择。";
+        }
+    } else if (hasFool && hasMagician) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n新的开始充满无限可能，\n发挥你的创造力，\n大胆尝试。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在冒险之前做好充分准备，\n让创造力与谨慎并存。";
+        }
+    } else if (hasPriestess && hasMoon) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n直觉与神秘的力量指引着你，\n相信内心的声音。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n面对内心的困惑，\n保持清醒的头脑，\n真相终将显现。";
+        }
+    } else if (hasEmpress && hasStar) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n丰盛与希望同在，\n这是实现梦想的最佳时机。\n保持信心。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求理想时不要忽视现实，\n找到梦想与实际的平衡点。";
+        }
+    } else if (hasEmperor && hasJustice) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n权威与公正的结合\n将带来稳定的发展。\n保持原则，坚持立场。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在坚持原则的同时保持灵活性，\n找到平衡点。";
+        }
+    } else if (hasChariot && hasStrength) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n前进的动力与内在的力量相结合，\n这是克服障碍的最佳时机。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求目标时保持耐心，\n不要被外在压力所影响。";
+        }
+    } else if (hasWheel && hasSun) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n命运之轮带来好运，\n保持积极乐观的心态，\n把握机遇。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n即使暂时遇到挫折，\n也要相信光明终将到来。\n保持希望。";
+        }
+    } else if (hasHanged && hasMoon) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n通过改变视角，\n你将看到事情的另一面。\n保持开放的心态。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n不要被表象所迷惑，\n深入思考才能找到真相。";
+        }
+    } else if (hasDevil && hasTower) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n打破束缚的时机已到，\n勇敢地面对改变，\n获得真正的自由。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求自由时保持警惕，\n不要陷入新的束缚。";
+        }
+    } else if (hasTemperance && hasStar) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n保持平衡与希望，\n这是实现梦想的关键。\n相信命运的安排。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求理想时保持耐心，\n不要急于求成。";
+        }
+    } else if (hasJudgement && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n重要的决定将带来圆满的结果。\n相信自己的判断。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n不要被过去的决定所困扰，\n新的开始就在眼前。";
+        }
+    } else if (hasFool && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n新的旅程将带来圆满的收获。\n保持开放和好奇的心态。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求目标时不要忽视细节，\n谨慎前行。";
+        }
+    } else if (hasMagician && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n你的能力将带来圆满的结果。\n相信自己的创造力。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求成功时保持谦逊，\n不要被成就所迷惑。";
+        }
+    } else if (hasPriestess && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n内在的智慧将指引你走向圆满。\n相信直觉。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求智慧时不要忽视实践，\n知行合一。";
+        }
+    } else if (hasLovers && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n爱与和谐将带来圆满的结果。\n珍惜身边的人和事。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求圆满时不要忽视关系的平衡，\n保持开放和包容。";
+        }
+    } else if (hasChariot && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n前进的动力将引领你走向圆满。\n保持决心和毅力。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求目标时不要忽视沿途的风景，\n保持平衡。";
+        }
+    } else if (hasStrength && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n内在的力量将帮助你实现圆满。\n相信自己的能力。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求圆满时不要忽视内心的声音，\n保持真实。";
+        }
+    } else if (hasHermit && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n独处的智慧将指引你走向圆满。\n保持耐心和专注。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求智慧时不要忽视与他人的连接，\n保持开放。";
+        }
+    } else if (hasWheel && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n命运之轮将带来圆满的结果。\n保持开放和适应变化。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在变化中保持稳定，\n相信命运的安排。";
+        }
+    } else if (hasJustice && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n公正与平衡将带来圆满的结果。\n保持正直和诚实。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求公正时不要忽视灵活性，\n找到平衡点。";
+        }
+    } else if (hasHanged && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n通过改变视角，\n你将看到圆满的另一面。\n保持开放的心态。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n不要被固有观念所束缚，\n用新的视角看待圆满。";
+        }
+    } else if (hasDeath && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n结束与新生将带来圆满的结果。\n接受改变，迎接新生。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求圆满时不要抗拒改变，\n这是必经之路。";
+        }
+    } else if (hasTemperance && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n平衡与和谐将带来圆满的结果。\n保持耐心和节制。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求圆满时不要忽视平衡，\n找到生活的节奏。";
+        }
+    } else if (hasDevil && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n面对诱惑，保持清醒，\n这是获得真正圆满的关键。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n摆脱束缚，找到真正的自由，\n这是圆满的开始。";
+        }
+    } else if (hasTower && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n突如其来的改变将带来圆满的结果。\n保持开放和适应。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求圆满时不要害怕改变，\n这是必经之路。";
+        }
+    } else if (hasStar && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n希望与信心将带来圆满的结果。\n保持乐观和坚定。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求希望时不要忽视现实，\n保持平衡。";
+        }
+    } else if (hasMoon && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n面对内心的困惑，保持勇气，\n这是走向圆满的必经之路。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求圆满时不要被表象所迷惑，\n保持清醒。";
+        }
+    } else if (hasSun && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n光明与喜悦将带来圆满的结果。\n保持积极和乐观。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n即使暂时遇到挫折，\n也要相信光明终将到来。";
+        }
+    } else if (hasJudgement && hasWorld) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n重要的决定将带来圆满的结果。\n相信自己的判断。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n不要被过去的决定所困扰，\n新的开始就在眼前。";
+        }
+    } else if (hasFool && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n新的开始充满丰盛与创造力。\n跟随内心的指引，大胆尝试。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求丰盛时不要忽视基础，\n保持脚踏实地。";
+        }
+    } else if (hasMagician && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n创造力与丰盛同在，\n这是实现梦想的最佳时机。\n保持信心。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求成功时不要忽视内心的需求，\n找到平衡点。";
+        }
+    } else if (hasPriestess && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n直觉与丰盛同在，\n这是收获的季节。\n相信内心的声音。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求丰盛时不要忽视内在的智慧，\n保持清醒。";
+        }
+    } else if (hasEmperor && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n权威与丰盛同在，\n这是实现目标的最佳时机。\n保持平衡。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求目标时不要忽视内心的需求，\n找到力量与温柔的平衡。";
+        }
+    } else if (hasHierophant && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n传统与丰盛同在，\n这是收获的季节。\n保持感恩和谦逊。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求丰盛时不要被传统所束缚，\n保持开放。";
+        }
+    } else if (hasLovers && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n爱与丰盛同在，\n这是收获的季节。\n珍惜身边的人和事。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求丰盛时不要忽视关系的平衡，\n保持开放和包容。";
+        }
+    } else if (hasChariot && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n前进的动力与丰盛同在，\n这是实现目标的最佳时机。\n保持决心。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求目标时不要忽视沿途的风景，\n保持平衡。";
+        }
+    } else if (hasStrength && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n内在的力量与丰盛同在，\n这是收获的季节。\n相信自己的能力。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求丰盛时不要忽视内心的声音，\n保持真实。";
+        }
+    } else if (hasHermit && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n独处的智慧与丰盛同在，\n这是收获的季节。\n保持耐心。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求丰盛时不要忽视与他人的连接，\n保持开放。";
+        }
+    } else if (hasWheel && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n命运之轮带来丰盛，\n这是收获的季节。\n保持开放和感恩。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在变化中保持稳定，\n相信命运的安排。";
+        }
+    } else if (hasJustice && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n公正与丰盛同在，\n这是收获的季节。\n保持正直和诚实。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求丰盛时不要忽视公正，\n找到平衡点。";
+        }
+    } else if (hasHanged && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n通过改变视角，\n你将看到丰盛的另一面。\n保持开放的心态。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n不要被固有观念所束缚，\n用新的视角看待丰盛。";
+        }
+    } else if (hasDeath && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n结束与新生将带来丰盛。\n接受改变，迎接新生。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求丰盛时不要抗拒改变，\n这是必经之路。";
+        }
+    } else if (hasTemperance && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n平衡与丰盛同在，\n这是收获的季节。\n保持耐心和节制。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求丰盛时不要忽视平衡，\n找到生活的节奏。";
+        }
+    } else if (hasDevil && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n面对诱惑，保持清醒，\n这是获得真正丰盛的关键。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n摆脱束缚，找到真正的自由，\n这是丰盛的开始。";
+        }
+    } else if (hasTower && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n突如其来的改变将带来丰盛。\n保持开放和适应。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求丰盛时不要害怕改变，\n这是必经之路。";
+        }
+    } else if (hasStar && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n希望与丰盛同在，\n这是收获的季节。\n保持乐观和坚定。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求丰盛时不要忽视现实，\n保持平衡。";
+        }
+    } else if (hasMoon && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n面对内心的困惑，保持勇气，\n这是走向丰盛的必经之路。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n在追求丰盛时不要被表象所迷惑，\n保持清醒。";
+        }
+    } else if (hasSun && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n光明与丰盛同在，\n这是收获的季节。\n保持积极和乐观。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n即使暂时遇到挫折，\n也要相信光明终将到来。";
+        }
+    } else if (hasJudgement && hasEmpress) {
+        if (allUpright) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n重要的决定将带来丰盛。\n相信自己的判断。";
+        } else if (hasReversed) {
+            emotionalGuidance = "\n\n\n\n\n\n\n✨\n不要被过去的决定所困扰，\n新的开始就在眼前。";
+        }
+    } else if (allReversed) {
+        emotionalGuidance = "\n\n\n\n\n\n\n✨\n虽然当前面临挑战，\n但请记住，逆境是成长的契机。\n保持耐心和信心。";
+    } else if (allUpright) {
+        emotionalGuidance = "\n\n\n\n\n\n\n✨\n命运之轮正在转动，\n保持积极乐观的心态，\n把握当下的机遇。";
+    } else if (hasReversed) {
+        emotionalGuidance = "\n\n\n\n\n\n\n✨\n在顺境与逆境中保持平衡，\n这是成长必经的过程。\n相信命运的安排。";
+    } else {
+        // 默认启示
+        const defaultGuidance = [
+            "\n\n\n\n\n\n\n✨\n相信自己的直觉，\n内心的声音往往最真实。",
+            "\n\n\n\n\n\n\n✨\n生命中的每个阶段都有其意义，\n保持耐心和信心。",
+            "\n\n\n\n\n\n\n✨\n不要被过去的阴影所困扰，\n未来充满无限可能。",
+            "\n\n\n\n\n\n\n✨\n当你感到迷茫时，\n请相信光明就在前方。",
+            "\n\n\n\n\n\n\n✨\n保持开放和包容的心态，\n接纳生命给予的一切。"
+        ];
+        emotionalGuidance = defaultGuidance[Math.floor(Math.random() * defaultGuidance.length)];
+    }
+    
+    return `${meanings.join('。')}。${emotionalGuidance}`;
+}
+
+// 添加荧光效果
+function addGlowEffect(element) {
+    element.style.textShadow = '0 0 10px var(--glow-purple)';
+    setTimeout(() => {
+        element.style.textShadow = 'none';
+    }, 1000);
+}
+
+function generateCardReadings(cards) {
+    return cards.map((card, index) => {
+        const positions = ['过去', '现在', '未来'];
+        const meaning = card.isReversed ? card.reversed : card.upright;
+        
+        return `
+            <div class="card-reading">
+                <h3>${positions[index]} - ${card.name} ${card.isReversed ? '(逆位)' : '(正位)'}</h3>
+                <p>${meaning}</p>
+            </div>
+        `;
+    }).join('');
+}
+
+// 初始化 MediaPipe Hands
+const hands = new Hands({
+    locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+    }
+});
+
+// 配置 MediaPipe Hands
+hands.setOptions({
+    maxNumHands: 1,
+    modelComplexity: 1,
+    minDetectionConfidence: 0.5,
+    minTrackingConfidence: 0.5
+});
+
+// 初始化摄像头
+async function initCamera() {
+    try {
+        const camera = new Camera(video, {
+            onFrame: async () => {
+                // 使用CSS transform来翻转视频画面
+                video.style.transform = 'scaleX(-1)';
+                
+                // 绘制到canvas
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                // 发送到MediaPipe
+                await hands.send({image: canvas});
+            },
+            width: 1280,
+            height: 720
+        });
+        await camera.start();
+        console.log('摄像头初始化成功');
+        return true;
+    } catch (error) {
+        console.error('摄像头初始化错误:', error);
+        showError('摄像头初始化失败，请刷新页面重试');
+        return false;
+    }
+}
+
+// 显示错误信息
+function showError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    document.body.appendChild(errorDiv);
+    
+    // 3秒后自动移除错误信息
+    setTimeout(() => {
+        errorDiv.remove();
+    }, 3000);
+}
+
+// 添加翻转音效
+function playFlipSound() {
+    const audio = new Audio('flip.mp3');
+    audio.volume = 0.5;
+    audio.play().catch(err => console.log('无法播放音效:', err));
+}
+
+// 添加卡牌发光效果样式
+const style = document.createElement('style');
+style.textContent = `
+    .deck-card.glowing {
+        box-shadow: 0 0 20px var(--glow-purple);
+        transform: translateY(-10px);
+    }
+`;
+document.head.appendChild(style);
+
+// 初始化
+initCamera();
+
+// 处理手势检测结果
+let lastCardSelectTime = 0;
+const CARD_SELECT_INTERVAL = 1500; // 1.5秒间隔
+
+hands.onResults((results) => {
+    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        const landmarks = results.multiHandLandmarks[0];
+        
+        // 使用食指指尖（landmark 8）作为选择点，并向上偏移
+        // 由于视频已经镜像翻转，所以需要翻转x坐标
+        const fingerX = (1 - landmarks[8].x) * window.innerWidth;
+        const fingerY = (landmarks[8].y - 0.1) * window.innerHeight; // 向上偏移10%的屏幕高度
+        
+        // 获取所有卡牌元素
+        const cards = document.querySelectorAll('.deck-card');
+        let closestCard = null;
+        let minDistance = Infinity;
+        
+        // 检查指尖是否在卡牌上方
+        cards.forEach((card, index) => {
+            const rect = card.getBoundingClientRect();
+            
+            // 计算指尖是否在卡牌区域内
+            const isInCardArea = 
+                fingerX >= rect.left && 
+                fingerX <= rect.right && 
+                fingerY >= rect.top && 
+                fingerY <= rect.bottom;
+            
+            if (isInCardArea) {
+                // 如果在卡牌区域内，计算到卡牌中心的距离
+                const cardX = rect.left + rect.width / 2;
+                const cardY = rect.top + rect.height / 2;
+                const distance = Math.sqrt(
+                    Math.pow(fingerX - cardX, 2) + Math.pow(fingerY - cardY, 2)
+                );
+                
+                // 找到最近的卡牌
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestCard = card;
+                }
+            }
+            
+            // 移除所有卡牌的发光效果
+            card.classList.remove('glowing');
+        });
+        
+        // 如果指尖在卡牌区域内
+        if (closestCard) {
+            // 添加发光效果
+            closestCard.classList.add('glowing');
+            
+            // 检测是否握拳（通过检查所有指尖是否都低于对应的指关节）
+            const isFist = 
+                landmarks[8].y > landmarks[5].y && // 食指
+                landmarks[12].y > landmarks[9].y && // 中指
+                landmarks[16].y > landmarks[13].y && // 无名指
+                landmarks[20].y > landmarks[17].y; // 小指
+            
+            if (isFist) {
+                // 检查是否满足时间间隔
+                const currentTime = Date.now();
+                if (currentTime - lastCardSelectTime >= CARD_SELECT_INTERVAL) {
+                    // 握拳时，翻转卡牌
+                    if (!closestCard.classList.contains('flipped')) {
+                        closestCard.classList.add('flipped');
+                        playFlipSound();
+                        
+                        // 如果卡牌还没有被选中，则选中它
+                        if (!closestCard.dataset.selected) {
+                            selectCard(closestCard);
+                            closestCard.dataset.selected = 'true';
+                        }
+                        
+                        // 更新最后选择时间
+                        lastCardSelectTime = currentTime;
+                    }
+                }
+            } else {
+                // 不是握拳时，恢复卡牌
+                if (closestCard.classList.contains('flipped')) {
+                    closestCard.classList.remove('flipped');
+                }
+            }
+        }
+    }
+});
+
+// 添加示例问题点击事件
+document.querySelectorAll('.category li').forEach(li => {
+    li.addEventListener('click', () => {
+        questionInput.value = li.textContent;
+        questionInput.focus();
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tutorialModal = document.querySelector('.tutorial-modal');
+    const startReadingBtn = document.querySelector('.start-reading-btn');
+
+    // 显示教程提示框
+    function showTutorial() {
+        tutorialModal.style.display = 'flex';
+    }
+
+    // 隐藏教程提示框
+    function hideTutorial() {
+        tutorialModal.style.display = 'none';
+    }
+
+    // 点击开始抽牌按钮时隐藏教程
+    startReadingBtn.addEventListener('click', hideTutorial);
+
+    // 点击教程提示框外部时隐藏教程
+    tutorialModal.addEventListener('click', (e) => {
+        if (e.target === tutorialModal) {
+            hideTutorial();
+        }
+    });
+});
+
+// 添加返回按钮事件监听
+document.getElementById('backButton').addEventListener('click', () => {
+    // 重置占卜
+    resetReading();
+    
+    // 显示问题输入框
+    document.querySelector('.question-section').style.display = 'block';
+    
+    // 清空问题输入
+    questionInput.value = '';
+    
+    // 隐藏结果页面
+    const resultElement = document.querySelector('.reading-result');
+    resultElement.style.display = 'none';
+    resultElement.classList.remove('visible');
+    
+    // 重置所有卡牌
+    cardSlots.forEach(slot => {
+        slot.classList.remove('flipped');
+        slot.innerHTML = '<div class="card-back"></div><div class="card-front"></div>';
+    });
+    
+    // 清空选中的卡牌
+    selectedCards = [];
+    
+    // 重新显示牌堆
+    showDeck();
+}); 

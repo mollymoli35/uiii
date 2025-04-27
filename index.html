@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神秘塔罗牌占卜</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/pixi.js@5.3.3/dist/pixi.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/live2d-widget@3.0.4/lib/L2Dwidget.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils"></script>
+    <script src="chat.js"></script>
+</head>
+<body>
+    <div class="stars-background" id="starsBackground"></div>
+    <div id="live2d-widget">
+        <div class="live2d-speech-bubble">
+            <p class="bubble-text">喵~让我来为你解读塔罗牌的指引吧~</p>
+        </div>
+    </div>
+    <div class="start-screen">
+        <div class="start-content">
+            <div class="crystal-ball">
+                <div class="ball-inner">
+                    <div class="ball-glow"></div>
+                    <div class="ball-pattern"></div>
+                    <div class="ball-reflection"></div>
+                    <div class="stars">
+                        <div class="star"></div>
+                        <div class="star"></div>
+                        <div class="star"></div>
+                        <div class="star"></div>
+                        <div class="star"></div>
+                        <div class="star"></div>
+                    </div>
+                </div>
+            </div>
+            <h1 class="start-title">塔罗牌占卜</h1>
+            <p class="start-subtitle">探索命运的指引</p>
+            <button id="startButton" class="start-button">
+                <span class="button-text">开始占卜</span>
+                <span class="button-glow"></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="video-container">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" style="display: none;"></canvas>
+        </div>
+        <header>
+            <h1>✨ 神秘塔罗牌占卜 ✨</h1>
+            <p class="subtitle">探索命运的奥秘</p>
+        </header>
+        
+        <div class="fortune-teller-selection" id="fortuneTellerSelection" style="display: none;">
+            <h2>选择你的占卜师</h2>
+            <div class="fortune-tellers">
+                <div class="fortune-teller" data-model="hijiki">
+                    <div class="speech-bubble">
+                        <p class="bubble-text">喵~让我来为你解读命运吧~</p>
+                    </div>
+                    <div class="fortune-teller-image"></div>
+                    <h3>午夜先生</h3>
+                    <p>一只神秘的黑猫，在午夜时分出现，擅长解读命运的神秘力量</p>
+                    <div class="fortune-teller-details">
+                        <p>✨ 精通塔罗牌解读</p>
+                        <p>✨ 擅长预测未来走向</p>
+                        <p>✨ 能够洞察人心</p>
+                        <p>✨ 提供精准的指引</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="question-section" style="display: none;">
+            <input type="text" id="question" placeholder="请输入你想占卜的问题..." />
+            <div class="example-questions">
+                <p class="example-title">示例问题：</p>
+                <div class="example-categories">
+                    <div class="category">
+                        <h4>感情类</h4>
+                        <ul>
+                            <li>我最近的桃花运如何？</li>
+                            <li>我和TA的关系会如何发展？</li>
+                            <li>我该如何改善目前的感情状态？</li>
+                        </ul>
+                    </div>
+                    <div class="category">
+                        <h4>学业/事业</h4>
+                        <ul>
+                            <li>我能顺利完成这次的作业/项目吗？</li>
+                            <li>我该选择哪个专业/职业方向？</li>
+                            <li>这次考试/面试会顺利吗？</li>
+                        </ul>
+                    </div>
+                    <div class="category">
+                        <h4>决策类</h4>
+                        <ul>
+                            <li>我应该去做这件事吗？</li>
+                            <li>这个选择会带来什么结果？</li>
+                            <li>我该如何处理这个困境？</li>
+                        </ul>
+                    </div>
+                    <div class="category">
+                        <h4>个人成长</h4>
+                        <ul>
+                            <li>我该如何提升自己？</li>
+                            <li>我最近需要注意什么？</li>
+                            <li>我该如何改善人际关系？</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <button id="startReading" class="start-reading-btn">开始抽牌</button>
+        </div>
+        
+        <div class="cards-container" style="display: none;">
+            <div class="tutorial-modal" id="tutorialModal">
+                <div class="tutorial-content">
+                    <h3>✨ 抽牌教程 ✨</h3>
+                    <div class="tutorial-section">
+                        <h4>鼠标操作：</h4>
+                        <p>1. 点击任意一张塔罗牌</p>
+                        <p>2. 牌会自动翻转并显示正位或逆位</p>
+                        <p>3. 依次选择三张牌完成占卜</p>
+                    </div>
+                    <div class="tutorial-section">
+                        <h4>手势操作：</h4>
+                        <p>1. 将手指移动到想要选择的牌上方</p>
+                        <p>2. 握拳选中当前牌</p>
+                        <p>3. 松开拳头可以取消选择</p>
+                        <p>4. 依次选择三张牌完成占卜</p>
+                    </div>
+                    <button id="startReading" class="start-reading-btn">开始抽牌</button>
+                </div>
+            </div>
+            <div class="card-slot" id="card1">
+                <div class="card-back"></div>
+                <div class="card-front"></div>
+            </div>
+            <div class="card-slot" id="card2">
+                <div class="card-back"></div>
+                <div class="card-front"></div>
+            </div>
+            <div class="card-slot" id="card3">
+                <div class="card-back"></div>
+                <div class="card-front"></div>
+            </div>
+        </div>
+        
+        <div class="reading-result" style="display: none;">
+            <div class="reading-container">
+                <div class="reading-introduction">
+                    <h3>塔罗指引</h3>
+                    <p>亲爱的朋友，关于你的问题："<span id="questionText"></span>"，塔罗牌为你带来了指引：</p>
+                </div>
+                
+                <div class="card-readings">
+                    <div class="card-reading">
+                        <h3>过去</h3>
+                        <p id="pastCard"></p>
+                    </div>
+                    <div class="card-reading">
+                        <h3>现在</h3>
+                        <p id="presentCard"></p>
+                    </div>
+                    <div class="card-reading">
+                        <h3>未来</h3>
+                        <p id="futureCard"></p>
+                    </div>
+                </div>
+                
+                <div class="personalized-guidance">
+                    <h3>塔罗的启示</h3>
+                    <div class="guidance-content">
+                        <p class="gentle-advice" id="overallMeaning"></p>
+                    </div>
+                </div>
+                
+                <div class="feedback-section">
+                    <div class="feedback-content">
+                        <p>塔罗牌为你带来了指引，愿这些启示能帮助你找到内心的答案。</p>
+                        <p>记住，塔罗牌是照亮前路的明灯，但最终的选择权在你手中。</p>
+                    </div>
+                </div>
+
+                <div class="chat-section">
+                    <h3>与占卜师对话</h3>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="chat-message fortune-teller">
+                                <p>如果你对这些牌的含义有任何疑问，都可以随时问我哦~</p>
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" id="chatInput" placeholder="输入你的问题...">
+                            <button id="sendMessage" class="send-button">发送</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="shareButton" class="action-button">分享结果</button>
+                <button id="backButton" class="action-button">重新占卜</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
